@@ -1,13 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using neXn.MOD.Properties;
 using SharpMik;
-using SharpMik.Player;
 using SharpMik.Drivers;
-using neXn.MOD.Properties;
+using SharpMik.Player;
+using System;
+using System.IO;
 
 namespace neXn.MOD
 {
@@ -17,11 +13,11 @@ namespace neXn.MOD
         /// Filename or Filepath to load
         /// </summary>
         public string Filename { get; set; }
-        public int Position { get; set; }
+        public int Position { get { return (int)this.module.sngpos; } }
         /// <summary>
         /// In Percent
         /// </summary>
-        public double Progress { get; set; }
+        public double Progress { get; private set; }
         /// <summary>
         /// Returns if playing
         /// </summary>
@@ -29,8 +25,9 @@ namespace neXn.MOD
         /// <summary>
         /// Returns string formatted in #.00%
         /// </summary>
-        public string ProgressPercent { get { return $"{this.Progress.ToString("#.00", System.Globalization.CultureInfo.InvariantCulture)}%"; } }
+        public string ProgressPercent { get { return $"{this.Progress.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}%"; } }
         public ModuleProperties ModuleProperties { get; private set; }
+        public short Volume { get { return (short)HelperFunctions.Map(this.module.volume, 0, 128, 0, 100); } }
 
         private MikMod mikMod;
         private Module module;
@@ -49,12 +46,23 @@ namespace neXn.MOD
                 this.Load();
             }
             mikMod.PlayerStateChangeEvent += new ModPlayer.PlayerStateChangedEvent(PlayerChange);
-
-            module.volume = 64;
+        }
+        /// <summary>
+        /// Set Module volume <br/>
+        /// module will be reloaded.
+        /// </summary>
+        /// <param name="percent">0-100</param>
+        public void SetVolume(short percent)
+        {
+            this.module.volume = (short)HelperFunctions.Map(percent, 0, 100, 0, 128);
         }
         public void Load()
         {
-            module = mikMod.LoadModule(this.Filename);
+            this.module = mikMod.LoadModule(this.Filename);
+            if (this.module == null)
+            {
+                throw new Exception($"Error loading module file \"{this.Filename}\"");
+            }
             this.ModuleProperties = new ModuleProperties()
             {
                 Songname = this.module.songname,
@@ -83,24 +91,29 @@ namespace neXn.MOD
         }
         public void TogglePause()
         {
-            mikMod.Stop();
+            switch (this.IsPlaying)
+            {
+                case true:
+                    mikMod.Stop();
+                    break;
+                case false:
+                    this.Play();
+                    break;
+            }
         }
 
         private void PlayerChange(ModPlayer.PlayerState state)
         {
-            this.Progress = Math.Round(this.mikMod.GetProgress()*100,2);
-            Console.WriteLine(module.tracks);
-            Console.WriteLine(module.sngremainder);
-            Console.WriteLine(module.patterns);
-            Console.WriteLine(module.numvoices);
-            Console.WriteLine(module.numpos);
-            Console.WriteLine(module.instruments);
-            Console.WriteLine(module.flags);
+            if (this.mikMod == null)
+            {
+                return;
+            }
+            this.Progress = Math.Round(this.mikMod.GetProgress() * 100, 2);
         }
 
         public void Dispose()
         {
-            if (mikMod!=null)
+            if (mikMod != null)
             {
                 this.UnLoad();
             }

@@ -54,8 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleProperties.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="MOD\Properties\ModuleProperties.cs" />
+    <Compile Include="MOD\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

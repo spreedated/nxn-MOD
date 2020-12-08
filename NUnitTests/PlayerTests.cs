@@ -44,6 +44,12 @@ namespace NUnitTests
                 x.FullPath = fPath;
             });
         }
+        [Test]
+        public void DeviceOutput()
+        {
+            Player player = new Player(testFiles[0].FullPath);
+            player.Play();
+        }
 
         [Test]
         public async Task PlayingTests()
@@ -75,13 +81,13 @@ namespace NUnitTests
             Volume(player, 5);
             await WaitPercent(player, 5);
 
-            player.TogglePause();
+            player.Pause();
             double pos = player.Progress;
             Assert.IsFalse(player.IsPlaying);
 
             await WaitMS(2000);
 
-            player.TogglePause();
+            player.Pause();
             Assert.AreEqual(pos,player.Progress);
             Assert.IsTrue(player.IsPlaying);
 
@@ -94,9 +100,9 @@ namespace NUnitTests
             Console.WriteLine($"Test for \"{tF.Extension}\" completed.");
         }
 
-        private void Volume(neXn.MOD.Player player, int vol)
+        private void Volume(Player player, int vol)
         {
-            player.SetVolume((short)vol);
+            player.Volume = (short)vol;
             Assert.AreEqual(vol,player.Volume);
         }
         private async Task WaitPercent(Player player, int percent)

@@ -34,6 +34,9 @@ namespace neXn.MOD
         /// Returns string formatted in #.00%
         /// </summary>
         public string ProgressPercent { get { return $"{this.Progress.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}%"; } }
+        /// <summary>
+        /// If a module is loaded, one can access its properties
+        /// </summary>
         public ModuleProperties ModuleProperties { get; private set; }
         #region Module Properties To Change
         /// <summary>

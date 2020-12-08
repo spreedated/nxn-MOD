@@ -45,6 +45,7 @@ namespace TestPlayer
             // 
             // BTN_Play
             // 
+            this.BTN_Play.Enabled = false;
             this.BTN_Play.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BTN_Play.Location = new System.Drawing.Point(216, 76);
             this.BTN_Play.Name = "BTN_Play";
@@ -56,6 +57,7 @@ namespace TestPlayer
             // 
             // BTN_Stop
             // 
+            this.BTN_Stop.Enabled = false;
             this.BTN_Stop.Location = new System.Drawing.Point(216, 12);
             this.BTN_Stop.Name = "BTN_Stop";
             this.BTN_Stop.Size = new System.Drawing.Size(26, 26);
@@ -76,6 +78,7 @@ namespace TestPlayer
             // 
             // BTN_Pause
             // 
+            this.BTN_Pause.Enabled = false;
             this.BTN_Pause.Location = new System.Drawing.Point(216, 44);
             this.BTN_Pause.Name = "BTN_Pause";
             this.BTN_Pause.Size = new System.Drawing.Size(26, 26);
@@ -87,6 +90,7 @@ namespace TestPlayer
             // CMB_OutputDevice
             // 
             this.CMB_OutputDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CMB_OutputDevice.Enabled = false;
             this.CMB_OutputDevice.FormattingEnabled = true;
             this.CMB_OutputDevice.Location = new System.Drawing.Point(263, 12);
             this.CMB_OutputDevice.Name = "CMB_OutputDevice";
@@ -96,11 +100,13 @@ namespace TestPlayer
             // 
             // TRK_Volume
             // 
+            this.TRK_Volume.Enabled = false;
             this.TRK_Volume.Location = new System.Drawing.Point(263, 75);
             this.TRK_Volume.Maximum = 100;
             this.TRK_Volume.Name = "TRK_Volume";
             this.TRK_Volume.Size = new System.Drawing.Size(166, 45);
             this.TRK_Volume.TabIndex = 5;
+            this.TRK_Volume.Value = 100;
             this.TRK_Volume.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
             // 
             // PRG_SongProgress
@@ -149,6 +155,7 @@ namespace TestPlayer
             this.Controls.Add(this.BTN_Play);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.TRK_Volume)).EndInit();
             this.ResumeLayout(false);

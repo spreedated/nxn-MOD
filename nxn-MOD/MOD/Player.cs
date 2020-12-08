@@ -9,12 +9,18 @@ using System.IO;
 
 namespace neXn.MOD
 {
+    /// <summary>
+    /// Class for playing module files
+    /// </summary>
     public class Player : IDisposable
     {
         /// <summary>
         /// Filename or Filepath to load
         /// </summary>
         public string Filename { get; set; }
+        /// <summary>
+        /// Current song position
+        /// </summary>
         public int Position { get { return (int)this.module.sngpos; } }
         /// <summary>
         /// In Percent
@@ -64,51 +70,82 @@ namespace neXn.MOD
             get { return this.module.loop; }
         }
         #endregion
-        private NaudioDriverAdvanced.NaudioDriverAdvacedOptions _NAudioOptions = new NaudioDriverAdvanced.NaudioDriverAdvacedOptions();
+        private readonly NaudioDriverAdvanced.NaudioDriverAdvacedOptions _NAudioOptions = new NaudioDriverAdvanced.NaudioDriverAdvacedOptions();
         private MikMod mikMod;
         private Module module;
 
         #region Constructor
-        private void InitConstructor(string fileName, Action action)
+        private void InitConstructor(string fileName, bool autoLoad = true)
         {
             this.Filename = fileName;
-            mikMod = new MikMod();
-            action();
-
-            if (!File.Exists(fileName))
-            {
-                throw new FileNotFoundException();
-            }
-            else
+            this.mikMod = new MikMod();
+            this.mikMod.Init<NaudioDriverAdvanced>(_NAudioOptions);
+            this.mikMod.PlayerStateChangeEvent += new ModPlayer.PlayerStateChangedEvent(PlayerChange);
+            if (autoLoad)
             {
                 this.Load();
             }
-            mikMod.PlayerStateChangeEvent += new ModPlayer.PlayerStateChangedEvent(PlayerChange);
         }
+        /// <summary>
+        /// Plain constructor<br/>
+        /// need to manually load a module
+        /// </summary>
+        public Player()
+        {
+            InitConstructor(null, false);
+        }
+        /// <summary>
+        /// Autoloads provided file as module
+        /// </summary>
+        /// <param name="fileName">Module filepath</param>
         public Player(string fileName)
         {
-            InitConstructor(fileName, () => { mikMod.Init<NaudioDriverAdvanced>(_NAudioOptions); });
+            InitConstructor(fileName);
         }
+        /// <summary>
+        /// Autoloads provided file as module
+        /// </summary>
+        /// <param name="fileName">Module filepath</param>
+        /// <param name="outputDevice">Device-Identifier, get a list from GetDevices()</param>
         public Player(string fileName, int outputDevice)
         {
             _NAudioOptions.OutputDevice = outputDevice;
-            InitConstructor(fileName, () => { mikMod.Init<NaudioDriverAdvanced>(_NAudioOptions); });
+            InitConstructor(fileName);
         }
         #endregion
-        //TODO: gtg
-        public void Load(string modulePath = this.Filename)
+
+        /// <summary>
+        /// Load a module file<br/>
+        /// for reload use Reload()<br/>
+        /// for load a new module, use Unload() first<br/>
+        /// </summary>
+        /// <param name="modulePath">Path to the module. null value will try to use property Filename</param>
+        public void Load(string modulePath = null)
         {
-            if (this.module==null)
+            if (this.IsPlaying)
             {
-                this.module = mikMod.LoadModule(this.Filename);
+                this.Stop();
+            }
+            if (this.module != null)
+            {
+                throw new Exception($"There's already a module loaded, unload first, loaded module \"{modulePath}\"");
+            }
+            if (modulePath!=null || this.Filename!=null)
+            {
+                modulePath = modulePath??this.Filename;
+                if (!File.Exists(modulePath))
+                {
+                    throw new FileNotFoundException();
+                }
+                this.module = mikMod.LoadModule(modulePath);
             }
             else
             {
-                throw new Exception($"There's already a module loaded, unload first, loaded module \"{this.Filename}\"");
+                throw new Exception("No module provided");
             }
             if (this.module == null)
             {
-                throw new Exception($"Error loading module file \"{this.Filename}\"");
+                throw new Exception($"Error loading module file \"{modulePath}\"");
             }
             this.ModuleProperties = new ModuleProperties()
             {
@@ -117,8 +154,11 @@ namespace neXn.MOD
                 Comments = this.module.comment,
                 MODType = this.module.modtype
             };
-            Debug.Print($"[nxn-MOD] Module loaded --{this.module.songname}--\n\t\t  File -- {Path.GetFileName(this.Filename)}");
+            Debug.Print($"[nxn-MOD] Module loaded --{this.module.songname}--\n\t\t  File -- {Path.GetFileName(modulePath)}");
         }
+        /// <summary>
+        /// Unloads a loaded module/file
+        /// </summary>
         public void UnLoad()
         {
             if (this.mikMod.IsPlaying())
@@ -127,24 +167,42 @@ namespace neXn.MOD
             }
             if (this.mikMod != null)
             {
-                mikMod.UnLoadModule(module);
+                this.mikMod.UnLoadModule(module);
+                this.module = null;
+                this.ModuleProperties = null;
             }
         }
+        /// <summary>
+        /// Quick access to UnLoad() and Load()
+        /// </summary>
         public void ReLoad()
         {
             this.UnLoad();
             this.Load();
         }
+        /// <summary>
+        /// Start playing or resume from pause
+        /// </summary>
         public void Play()
         {
+            if (module==null)
+            {
+                throw new Exception("No module loaded");
+            }
             mikMod.Play(module);
-            Debug.Print($"[nxn-MOD] Playing --{this.module.songname}--\n\t\t  On device -- {this.GetDevices()[this.OutputDevice]}");
+            Debug.Print($"[nxn-MOD] Playing --{this.module.songname}--\n\t\t  On device -- {Player.GetDevices()[this.OutputDevice]}");
         }
+        /// <summary>
+        /// Stop playing
+        /// </summary>
         public void Stop()
         {
             mikMod.SetPosition(0);
             mikMod.Stop();
         }
+        /// <summary>
+        /// Toggle pause and play
+        /// </summary>
         public void Pause()
         {
             switch (this.IsPlaying)
@@ -158,11 +216,11 @@ namespace neXn.MOD
             }
         }
         /// <summary>
-        /// Output a Dictionary of int,string<br/>
+        /// Outputs a Dictionary of int,string<br/>
         /// identifier,productName
         /// </summary>
         /// <returns></returns>
-        public Dictionary<int,string> GetDevices()
+        public static Dictionary<int,string> GetDevices()
         {
             return NaudioDriverAdvanced.NaudioDriverAdvacedOptions.GetOutputDevices();
         }
@@ -183,17 +241,20 @@ namespace neXn.MOD
             }
             //# ### #
         }
-
+        /// <summary>
+        /// Dispose
+        /// </summary>
         public void Dispose()
         {
-            if (mikMod != null)
+            if (this.IsPlaying)
+            {
+                this.Stop();
+            }
+            if (this.mikMod != null)
             {
                 this.UnLoad();
             }
-            mikMod = null;
-            module = null;
+            this.mikMod.Dispose();
         }
-
-        
     }
 }

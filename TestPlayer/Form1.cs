@@ -1,16 +1,10 @@
-﻿using System;
-using System.Reflection;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using neXn.MOD;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Windows.Forms;
-using neXn.MOD;
 
 namespace TestPlayer
 {
@@ -20,7 +14,6 @@ namespace TestPlayer
         {
             InitializeComponent();
         }
-
         Player player;
         private readonly string trackPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase).Replace(@"file:\", string.Empty), @"..\..\..\NUnitTests\TestFiles"));
         private void Form1_Load(object sender, EventArgs e)
@@ -33,68 +26,87 @@ namespace TestPlayer
 
             Dictionary<string, string> tracks = new Dictionary<string, string>();
 
-            Directory.GetFiles(trackPath).ToList().ForEach(x => {
-                tracks.Add(Path.GetFileName(x),x);
+            Directory.GetFiles(trackPath).ToList().ForEach(x =>
+            {
+                tracks.Add(Path.GetFileName(x), x);
             });
 
             LSB_Tracks.DataSource = tracks.ToList();
             LSB_Tracks.DisplayMember = "key";
         }
-
         private void BTN_Load_Click(object sender, EventArgs e)
         {
-            player = new Player(((KeyValuePair<string,string>)LSB_Tracks.SelectedItem).Value);
+            // # Possible init 1 (easiest)
+            this.player = new Player(((KeyValuePair<string, string>)LSB_Tracks.SelectedItem).Value);
 
-            CMB_OutputDevice.DataSource = player.GetDevices().ToList();
+            // # Possible init 2
+            //this.player = new Player();
+            //this.player.Load(((KeyValuePair<string, string>)LSB_Tracks.SelectedItem).Value);
+
+            // # Possible init 3
+            //this.player = new Player();
+            //this.player.Filename = ((KeyValuePair<string, string>)LSB_Tracks.SelectedItem).Value;
+            //this.player.Load();
+
+            CMB_OutputDevice.DataSource = Player.GetDevices().ToList();
             CMB_OutputDevice.DisplayMember = "value";
-        }
 
+            ToggleButtons();
+        }
         bool togglePause;
         private void BTN_Pause_Click(object sender, EventArgs e)
         {
-            togglePause = player.IsPlaying;
+            togglePause = this.player.IsPlaying;
             togglePause ^= true;
             switch (togglePause)
             {
                 case true:
-                    player.Play();
+                    this.player.Play();
                     break;
                 case false:
-                    player.Pause();
+                    this.player.Pause();
                     break;
             }
         }
-
         private void BTN_Stop_Click(object sender, EventArgs e)
         {
-            player.Stop();
+            this.player.Stop();
             SongTimer.Stop();
             PRG_SongProgress.Value = 0;
             LBL_SongPercent.Text = "";
         }
-
         private void BTN_Play_Click(object sender, EventArgs e)
         {
-            player.Play();
+            this.player.Play();
             SongTimer.Start();
         }
-
-        
-
+        private void ToggleButtons()
+        {
+            BTN_Play.Enabled ^= true;
+            BTN_Pause.Enabled ^= true;
+            BTN_Stop.Enabled ^= true;
+            CMB_OutputDevice.Enabled ^= true;
+            TRK_Volume.Enabled ^= true;
+        }
         private void CMB_OutputDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
-            player.OutputDevice = ((KeyValuePair<int, string>)((ComboBox)sender).SelectedItem).Key;
+            this.player.OutputDevice = ((KeyValuePair<int, string>)((ComboBox)sender).SelectedItem).Key;
         }
-
         private void TrackBar1_Scroll(object sender, EventArgs e)
         {
-            player.Volume = (short)((TrackBar)sender).Value;
+            this.player.Volume = (short)((TrackBar)sender).Value;
         }
-
         private void SongTimer_Tick(object sender, EventArgs e)
         {
-            PRG_SongProgress.Value = (int)player.Progress;
-            LBL_SongPercent.Text = player.ProgressPercent;
+            PRG_SongProgress.Value = (int)this.player.Progress;
+            LBL_SongPercent.Text = this.player.ProgressPercent;
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (player != null)
+            {
+                player.Dispose();
+            }
         }
     }
 }

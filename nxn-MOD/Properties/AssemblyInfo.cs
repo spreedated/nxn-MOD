@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("nxn-MOD")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Handling of MOD Files")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("neXn-Systems")]
 [assembly: AssemblyProduct("nxn-MOD")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("2020 © Markus Karl Wackermann")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

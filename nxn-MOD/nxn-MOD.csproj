@@ -62,6 +62,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MOD\Converter\Wave.cs" />
+    <Compile Include="MOD\Converter\Converter.cs" />
     <Compile Include="MOD\HelperFunctions.cs" />
     <Compile Include="MOD\Properties\ModuleProperties.cs" />
     <Compile Include="MOD\Player.cs" />

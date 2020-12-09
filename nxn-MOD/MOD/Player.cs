@@ -150,14 +150,32 @@ namespace neXn.MOD
             {
                 throw new Exception($"Error loading module file \"{modulePath}\"");
             }
-            this.ModuleProperties = new ModuleProperties()
-            {
-                Songname = this.module.songname,
-                BPM = this.module.bpm,
-                Comments = this.module.comment,
-                MODType = this.module.modtype
-            };
+            LoadModuleProperties();
             Debug.Print($"[nxn-MOD] Module loaded --{this.module.songname}--\n\t\t  File -- {Path.GetFileName(modulePath)}");
+        }
+        private void LoadModuleProperties()
+        {
+            try
+            {
+                this.ModuleProperties = new ModuleProperties()
+                {
+                    Songname = this.module.songname,
+                    BPM = this.module.bpm,
+                    Comments = this.module.comment,
+                    MODType = this.module.modtype,
+                    NumberPositions = this.module.numpos,
+                    NumberChannels = this.module.realchn,
+                    NumberInstruments = this.module.numins,
+                    NumberPatters = this.module.numpat,
+                    NumberSamples = this.module.numsmp,
+                    NumberTracks = this.module.numtrk,
+                    NumberTotalChannels = this.module.totalchn
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"[nxn-MOD] Failed to load module properties \"{ex.Message}\"");
+            }
         }
         /// <summary>
         /// Unloads a loaded module/file

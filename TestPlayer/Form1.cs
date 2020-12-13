@@ -36,6 +36,11 @@ namespace TestPlayer
         }
         private void BTN_Load_Click(object sender, EventArgs e)
         {
+            if (this.player!=null)
+            {
+                this.player.Dispose();
+            }
+
             // # Possible init 1 (easiest)
             this.player = new Player(((KeyValuePair<string, string>)LSB_Tracks.SelectedItem).Value);
 
@@ -51,7 +56,7 @@ namespace TestPlayer
             CMB_OutputDevice.DataSource = Player.GetDevices().ToList();
             CMB_OutputDevice.DisplayMember = "value";
 
-            ToggleButtons();
+            ToggleButtons(true);
         }
         bool togglePause;
         private void BTN_Pause_Click(object sender, EventArgs e)
@@ -80,8 +85,17 @@ namespace TestPlayer
             this.player.Play();
             SongTimer.Start();
         }
-        private void ToggleButtons()
+        private void ToggleButtons(bool activate = false)
         {
+            if (activate)
+            {
+                BTN_Play.Enabled = true;
+                BTN_Pause.Enabled = true;
+                BTN_Stop.Enabled = true;
+                CMB_OutputDevice.Enabled = true;
+                TRK_Volume.Enabled = true;
+                return;
+            }
             BTN_Play.Enabled ^= true;
             BTN_Pause.Enabled ^= true;
             BTN_Stop.Enabled ^= true;

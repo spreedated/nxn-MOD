@@ -70,7 +70,7 @@ namespace neXn.MOD
         public bool Loop
         {
             set { this.module.loop = value; }
-            get { return this.module.loop; }
+            get { return this.module!=null?this.module.loop:false; }
         }
         #endregion
         private readonly NaudioDriverAdvanced.NaudioDriverAdvacedOptions _NAudioOptions = new NaudioDriverAdvanced.NaudioDriverAdvacedOptions();

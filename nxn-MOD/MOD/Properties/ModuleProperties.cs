@@ -5,7 +5,9 @@
     /// </summary>
     public class ModuleProperties
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ushort BPM { get; set; }
+
         /// <summary>
         /// Name of song
         /// </summary>
@@ -32,5 +34,6 @@
         public ushort NumberTotalChannels { get; set; }
         public ushort NumberTracks { get; set; }
         public ushort SongSpeed { get; set; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

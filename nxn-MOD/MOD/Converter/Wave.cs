@@ -11,23 +11,36 @@ using System.IO;
 
 namespace neXn.MOD.Converter
 {
-    public class Wave : Converter, IConverter
+    /// <summary>
+    /// Class for converting MOD files to Wave files
+    /// </summary>
+    public class Wave : Converter
     {
         private void InitContructor()
         {
             base.mikMod = new MikMod();
         }
         #region Constructor
+        /// <summary>
+        /// Simple constructor, you need to manually set the outputFilename
+        /// </summary>
         public Wave()
         {
             InitContructor();
         }
+        /// <summary>
+        /// Most convenient constructor
+        /// </summary>
+        /// <param name="outputFilename"></param>
         public Wave(string outputFilename)
         {
             InitContructor();
             base.OutputFilepath = outputFilename;
         }
         #endregion
+        /// <summary>
+        /// Actual converting function
+        /// </summary>
         public void Convert()
         {
             base.OverwriteCheck();
@@ -55,7 +68,9 @@ namespace neXn.MOD.Converter
 
             Conversion();
         }
-
+        /// <summary>
+        /// Conversion sub-routine
+        /// </summary>
         private void Conversion()
         {
             base.mikMod.Play(base.module); //Must play to convert...

@@ -45,10 +45,25 @@ namespace NUnitTests
             });
         }
         [Test]
-        public void DeviceOutput()
+        public async Task DeviceOutput()
         {
-            Player player = new Player(testFiles[0].FullPath);
-            player.Play();
+            Dictionary<int,string> devices = Player.GetDevices();
+
+            if (devices.Count >= 2)
+            {
+                Player player = new Player(testFiles[0].FullPath) { OutputDevice = 0 };
+                player.Play();
+                await WaitMS(2000);
+                player.OutputDevice = 1;
+                await WaitMS(2000);
+                player.Stop();
+                player.Dispose();
+                Assert.IsTrue(true);
+            }
+            else 
+            {
+                Console.WriteLine("Not enough audio output devices for this test.");
+            }
         }
 
         [Test]

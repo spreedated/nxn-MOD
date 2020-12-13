@@ -40,6 +40,7 @@ namespace NUnitTests
             Console.WriteLine($"Filesize of conversion is {ByteSize.FromBytes(acc.Length).MegaBytes:0.##} MB ({ByteSize.FromBytes(acc.Length).MebiBytes:0.##} MiB)");
 
             Assert.Greater(acc.Length, 1024);
+            Assert.AreEqual(".wav", acc.Extension);
         }
 
         [TearDown]

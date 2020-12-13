@@ -45,9 +45,6 @@
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio.Lame">
-      <HintPath>Libs\NAudio.Lame.dll</HintPath>
-    </Reference>
     <Reference Include="SharpMikNAudio">
       <HintPath>Libs\SharpMikNAudio.dll</HintPath>
     </Reference>
@@ -62,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MOD\Converter\MP3.cs" />
     <Compile Include="MOD\Converter\Wave.cs" />
     <Compile Include="MOD\Converter\Converter.cs" />
     <Compile Include="MOD\HelperFunctions.cs" />

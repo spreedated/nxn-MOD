@@ -60,7 +60,7 @@ namespace neXn.MOD
                 if (isCurrentlyPlaying) 
                 {
                     this.Play();
-                } 
+                }
             }
             get { return _NAudioOptions.OutputDevice; }
         }

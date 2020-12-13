@@ -11,7 +11,6 @@ using System.IO;
 
 namespace neXn.MOD.Converter
 {
-    //TODO: continue
     public class Wave : Converter, IConverter
     {
         private void InitContructor()
@@ -32,17 +31,41 @@ namespace neXn.MOD.Converter
         public void Convert()
         {
             base.OverwriteCheck();
+            base.OutputFileCheck();
 
-            WavDriver.WavDriverOptions e = new WavDriver.WavDriverOptions();
-            e.OutputFilename = this.OutputFilepath;
-            e.Overwrite = base.OverwriteExisting;
-
-            if (!base.mikMod.Init<WavDriver>(e))
+            WavDriver.WavDriverOptions e = new WavDriver.WavDriverOptions
             {
-                throw new Exception($"Error loading Driver");
-            } 
+                OutputFilename = this.OutputFilepath,
+                Overwrite = base.OverwriteExisting
+            };
 
+            base.mikMod.Init<WavDriver>(e);
+            //if (!base.mikMod.Init<WavDriver>(e))
+            //{
+            //    throw new Exception($"Error loading Driver");
+            //}
 
+            base.module = base.mikMod.LoadModule(base.InputFilename);
+
+            if (base.module==null)
+            {
+                throw new Exception($"Error loading Module");
+            }
+            
+            base.module.loop = false;
+
+            Conversion();
+        }
+
+        private void Conversion()
+        {
+            base.mikMod.Play(base.module); //Must play to convert...
+            base.mikMod.Update(); //First step
+            while (base.mikMod.GetProgress() > 0f)
+            {
+                base.mikMod.Update();
+            }
+            base.mikMod.Exit(); //Write header files (finish)
         }
     }
 }

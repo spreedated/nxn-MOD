@@ -10,7 +10,7 @@ using SharpMik.Player;
 
 namespace neXn.MOD.Converter
 {
-    public abstract class Converter : IConverter
+    public abstract class Converter : IConverter, IDisposable
     {
         public bool OverwriteExisting { get; set; }
         public string OutputFilepath { get; set; }
@@ -29,6 +29,23 @@ namespace neXn.MOD.Converter
             {
                 throw new Exception($"File ({this.OutputFilepath}) does exists and overwrite is not permitted by property \"OverwriteExisting\"");
             }
+        }
+
+        public void OutputFileCheck()
+        {
+            if (File.Exists(this.OutputFilepath))
+            {
+                throw new Exception($"Output file does already exist \"{Path.GetFileName(this.OutputFilepath)}\"");
+            }
+        }
+
+        public void Dispose()
+        {
+            if (this.mikMod!=null)
+            {
+                mikMod.Dispose();
+            }
+            this.module = null;
         }
     }
 

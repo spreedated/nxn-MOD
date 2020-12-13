@@ -16,13 +16,23 @@ namespace NUnitTests
     [TestFixture]
     public class ConverterTests
     {
+        private readonly string testFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase).Replace(@"file:\", string.Empty), @"..\..\..\NUnitTests\TestFiles"));
+
         [Test]
-        public void Test()
+        public void DontOverwriteFile()
         {
-            Wave k = new Wave();
-            k.OverwriteExisting = true;
-            k.OutputFilepath = @"C:\Users\SpReeD\Desktop\autopilot - cockpit\32999_1280.webp";
-            k.Convert();
+            using (Wave k = new Wave() { OverwriteExisting = false, OutputFilepath = Path.Combine(testFilePath, "AVP.mod")} )
+            {
+                Assert.Throws<Exception>(()=> { k.Convert(); });
+            }
+        }
+        [Test]
+        public void ConverstionTest()
+        {
+            using (Wave k = new Wave() { OverwriteExisting = false, OutputFilepath = Path.Combine(testFilePath, "testOut.wav"), InputFilename= Path.Combine(testFilePath, "AVP.mod") })
+            {
+                k.Convert();
+            }
         }
     }
 }

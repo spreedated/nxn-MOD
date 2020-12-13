@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpMik;
-using SharpMik.Drivers;
+﻿using SharpMik.Drivers;
 using SharpMik.Player;
-using System.Diagnostics;
-using System.IO;
+using System;
 
 namespace neXn.MOD.Converter
 {
@@ -59,11 +52,11 @@ namespace neXn.MOD.Converter
 
             base.module = base.mikMod.LoadModule(base.InputFilename);
 
-            if (base.module==null)
+            if (base.module == null)
             {
                 throw new Exception($"Error loading Module");
             }
-            
+
             base.module.loop = false;
 
             Conversion();

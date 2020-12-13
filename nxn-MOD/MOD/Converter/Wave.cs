@@ -39,11 +39,10 @@ namespace neXn.MOD.Converter
                 Overwrite = base.OverwriteExisting
             };
 
-            base.mikMod.Init<WavDriver>(e);
-            //if (!base.mikMod.Init<WavDriver>(e))
-            //{
-            //    throw new Exception($"Error loading Driver");
-            //}
+            if (!base.mikMod.Init<WavDriver>(e))
+            {
+                throw new Exception($"Error loading Driver");
+            }
 
             base.module = base.mikMod.LoadModule(base.InputFilename);
 

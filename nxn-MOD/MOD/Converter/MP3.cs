@@ -26,8 +26,8 @@ namespace neXn.MOD.Converter
             //    int sampleRate = reader.WaveFormat.SampleRate;
             //    int bitPerSample = reader.WaveFormat.BitsPerSample;
 
-            //    //LameMP3FileWriter k = new LameMP3FileWriter("", new NAudio.Wave.WaveFormat(sampleRate, 16, numChannels), 128);
-                
+            //    //LameMP3FileWriter k = new LameMP3FileWriter("", new WaveFormat(sampleRate, 16, numChannels), 128);
+
             //}
 
 

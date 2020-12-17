@@ -7,8 +7,8 @@ using System.Reflection;
 
 namespace NUnitTests
 {
-    [TestFixture]
-    public class ConverterTests
+    [TestFixture(Description = "MOD -> Wave")]
+    public class ConverterTests_MOD_WAVE
     {
         private readonly string testFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase).Replace(@"file:\", string.Empty), @"..\..\..\NUnitTests\TestFiles"));
         private string testFile;

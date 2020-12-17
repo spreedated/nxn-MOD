@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>nxn-MOD</id>
+    <version>1.0.0</version>
+    <authors>Markus Wackermann</authors>
+    <owners>Markus Wackermann</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="file">LICENSE.txt</license>
+    <projectUrl>https://github.com/spreedated/nxn-MOD</projectUrl>
+    <description>Uses the famous NAudio Engine and a modified version of SharpMikNAudio to bring playback and conversion of module soundfiles to .NET (C# and VB)</description>
+    <summary>Implements handling of MOD / Module Soundfiles, like XM, MOD, S3M and many other</summary>
+    <releaseNotes>
+      v1.0.0 Initial Release
+    </releaseNotes>
+    <copyright>Copyright (c) 2020 Markus Wackermann</copyright>
+    <language>en-US</language>
+    <tags>C# audio module mod xm s3m player wrapper</tags>
+    <repository type="git" url="https://github.com/spreedated/nxn-MOD.git" />
+    <dependencies>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="nxn-MOD\bin\Release\nxn-MOD.dll" target="lib\net46" />
+    <file src="nxn-MOD\bin\Release\nxn-MOD.xml" target="lib\net46" />
+    <file src="nxn-MOD\bin\Release\nxn-MOD.pdb" target="lib\net46" />
+    <file src="LICENSE.txt" target="LICENSE.txt" />
+  </files>
+</package>
